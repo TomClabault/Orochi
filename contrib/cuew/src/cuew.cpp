@@ -1086,6 +1086,7 @@ _LIBRARY_FIND( cuda_lib, cuGraphReleaseUserObject );
 _LIBRARY_FIND( cuda_lib, cuGraphRemoveDependencies );
 _LIBRARY_FIND( cuda_lib, cuGraphRetainUserObject );
 _LIBRARY_FIND( cuda_lib, cuGraphUpload );
+_LIBRARY_FIND( cuda_lib, cuGraphicsGLRegisterBuffer );
 _LIBRARY_FIND( cuda_lib, cuGraphicsMapResources );
 _LIBRARY_FIND( cuda_lib, cuGraphicsResourceGetMappedMipmappedArray );
 _LIBRARY_FIND( cuda_lib, cuGraphicsResourceGetMappedPointer_v2 );
