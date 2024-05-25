@@ -659,6 +659,7 @@ tcudaGraphReleaseUserObject *cudaGraphReleaseUserObject_oro = nullptr;
 tcudaGraphRemoveDependencies *cudaGraphRemoveDependencies_oro = nullptr;
 tcudaGraphRetainUserObject *cudaGraphRetainUserObject_oro = nullptr;
 tcudaGraphUpload *cudaGraphUpload_oro = nullptr;
+tcuGraphicsGLRegisterBuffer* cuGraphicsGLRegisterBuffer_oro = nullptr;
 tcudaGraphicsMapResources *cudaGraphicsMapResources_oro = nullptr;
 tcudaGraphicsResourceGetMappedMipmappedArray *cudaGraphicsResourceGetMappedMipmappedArray_oro = nullptr;
 tcudaGraphicsResourceGetMappedPointer *cudaGraphicsResourceGetMappedPointer_oro = nullptr;

@@ -241,6 +241,7 @@ typedef CUresult CUDAAPI tcuGraphReleaseUserObject(CUgraph graph, CUuserObject o
 typedef CUresult CUDAAPI tcuGraphRemoveDependencies(CUgraph hGraph, const CUgraphNode * from, const CUgraphNode * to, size_t numDependencies);
 typedef CUresult CUDAAPI tcuGraphRetainUserObject(CUgraph graph, CUuserObject object, unsigned int count, unsigned int flags);
 typedef CUresult CUDAAPI tcuGraphUpload(CUgraphExec hGraphExec, CUstream hStream);
+typedef CUresult CUDAAPI tcuGraphicsGLRegisterBuffer( CUgraphicsResource* pCudaResource, unsigned int buffer, unsigned int Flags );
 typedef CUresult CUDAAPI tcuGraphicsMapResources(unsigned int count, CUgraphicsResource * resources, CUstream hStream);
 typedef CUresult CUDAAPI tcuGraphicsResourceGetMappedMipmappedArray(CUmipmappedArray * pMipmappedArray, CUgraphicsResource resource);
 typedef CUresult CUDAAPI tcuGraphicsResourceGetMappedPointer_v2(CUdeviceptr * pDevPtr, size_t * pSize, CUgraphicsResource resource);
@@ -949,6 +950,7 @@ extern tcuGraphReleaseUserObject *cuGraphReleaseUserObject_oro;
 extern tcuGraphRemoveDependencies *cuGraphRemoveDependencies_oro;
 extern tcuGraphRetainUserObject *cuGraphRetainUserObject_oro;
 extern tcuGraphUpload *cuGraphUpload_oro;
+extern tcuGraphicsGLRegisterBuffer* cuGraphicsGLRegisterBuffer_oro;
 extern tcuGraphicsMapResources *cuGraphicsMapResources_oro;
 extern tcuGraphicsResourceGetMappedMipmappedArray *cuGraphicsResourceGetMappedMipmappedArray_oro;
 extern tcuGraphicsResourceGetMappedPointer_v2 *cuGraphicsResourceGetMappedPointer_v2_oro;
