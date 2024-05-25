@@ -76,6 +76,7 @@ extern "C" {
 // CUDA_VERSION = 12020
 
 
+typedef CUresult CUDAAPI tcuGraphicsGLRegisterBuffer( CUgraphicsResource* pCudaResource, unsigned int buffer, unsigned int Flags );
 typedef CUresult CUDAAPI tcuArray3DCreate_v2(CUarray * pHandle, const CUDA_ARRAY3D_DESCRIPTOR * pAllocateArray);
 typedef CUresult CUDAAPI tcuArray3DGetDescriptor_v2(CUDA_ARRAY3D_DESCRIPTOR * pArrayDescriptor, CUarray hArray);
 typedef CUresult CUDAAPI tcuArrayCreate_v2(CUarray * pHandle, const CUDA_ARRAY_DESCRIPTOR * pAllocateArray);
@@ -784,7 +785,8 @@ typedef nvrtcResult CUDAAPI tnvrtcGetProgramLogSize(nvrtcProgram prog, size_t * 
 typedef nvrtcResult CUDAAPI tnvrtcGetSupportedArchs(int * supportedArchs);
 typedef nvrtcResult CUDAAPI tnvrtcVersion(int * major, int * minor);
 
-extern tcuArray3DCreate_v2 *cuArray3DCreate_v2_oro;
+extern tcuGraphicsGLRegisterBuffer* cuGraphicsGLRegisterBuffer_oro;
+extern tcuArray3DCreate_v2* cuArray3DCreate_v2_oro;
 extern tcuArray3DGetDescriptor_v2 *cuArray3DGetDescriptor_v2_oro;
 extern tcuArrayCreate_v2 *cuArrayCreate_v2_oro;
 extern tcuArrayDestroy *cuArrayDestroy_oro;
@@ -1514,20 +1516,9 @@ enum {
 enum { CUEW_INIT_CUDA = 1, CUEW_INIT_NVRTC = 2 };
 
 
-#ifdef __cplusplus
-#define cuew__dparm(x) = x
-#else
-#define cuew__dparm(x)
-#endif
 
 
-// 'customPaths_**' are optional parameters and can be used to overide the default values defined in CUEW.
-// It's a list of C-strings. This list must have a NULL as last element.
-// The order of the elements matters: the first library file to exist will be the one loaded.
-// Example, for Windows:
-// customPaths_NvRTC[]    = {"nvrtc64_120_0.dll", "nvrtc64_112_0.dll", NULL};
-void cuewInit( int* resultDriver, int* resultRtc, cuuint32_t flags, const char** customPaths_Cuda cuew__dparm(0), const char** customPaths_CudaRT cuew__dparm(0), const char** customPaths_NvRTC cuew__dparm(0) );
-
+void cuewInit( int* resultDriver, int* resultRtc, cuuint32_t flags );
 const char *cuewErrorString(CUresult result);
 const char *cuewCompilerPath(void);
 int cuewCompilerVersion(void);

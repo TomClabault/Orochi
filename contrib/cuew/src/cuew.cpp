@@ -105,6 +105,7 @@ static_assert(  ((int)CUDART_VERSION / (int)1000) ==  ((int)12020/ (int)1000)  )
 
 
 
+tcuGraphicsGLRegisterBuffer* cuGraphicsGLRegisterBuffer_oro = nullptr; 
 tcuArray3DCreate_v2 *cuArray3DCreate_v2_oro = nullptr;
 tcuArray3DGetDescriptor_v2 *cuArray3DGetDescriptor_v2_oro = nullptr;
 tcuArrayCreate_v2 *cuArrayCreate_v2_oro = nullptr;
@@ -856,7 +857,7 @@ static void cuewCudaExit(void)
   }
 }
 
-static int cuewCudaInit(const char** customPaths_Cuda, const char** customPaths_CudaRT)
+static int cuewCudaInit(void)
 {
   // Library paths.
 #ifdef _WIN32
@@ -888,7 +889,7 @@ static int cuewCudaInit(const char** customPaths_Cuda, const char** customPaths_
   }
 
   // Load library.
-  cuda_lib = dynamic_library_open_find(customPaths_Cuda ? customPaths_Cuda : cuda_paths);
+  cuda_lib = dynamic_library_open_find(cuda_paths);
 
   if (cuda_lib == NULL) {
     result = CUEW_ERROR_OPEN_FAILED;
@@ -898,7 +899,7 @@ static int cuewCudaInit(const char** customPaths_Cuda, const char** customPaths_
 
 
   // Load library.
-  cudart_lib = dynamic_library_open_find(customPaths_CudaRT ? customPaths_CudaRT : cudart_paths);
+  cudart_lib = dynamic_library_open_find(cudart_paths);
 
   if (cudart_lib == NULL) {
       // maybe better to not fail for this DLL, which is not included in driver ? 
@@ -1002,7 +1003,8 @@ _LIBRARY_FIND( cuda_lib, cuEventSynchronize );
 _LIBRARY_FIND( cuda_lib, cuExternalMemoryGetMappedBuffer );
 _LIBRARY_FIND( cuda_lib, cuExternalMemoryGetMappedMipmappedArray );
 _LIBRARY_FIND( cuda_lib, cuFlushGPUDirectRDMAWrites );
-_LIBRARY_FIND( cuda_lib, cuFuncGetAttribute );
+void* testRes = _LIBRARY_FIND( cuda_lib, cuFuncGetAttribute );
+testRes = _LIBRARY_FIND( cuda_lib, cuGraphicsGLRegisterBuffer );
 _LIBRARY_FIND( cuda_lib, cuFuncGetModule );
 _LIBRARY_FIND( cuda_lib, cuFuncSetAttribute );
 _LIBRARY_FIND( cuda_lib, cuFuncSetBlockShape );
@@ -1624,7 +1626,7 @@ static void cuewExitNvrtc(void)
   }
 }
 
-static int cuewNvrtcInit(const char** customPaths_NvRTC)
+static int cuewNvrtcInit(void)
 {
   /* Library paths. */
 #ifdef _WIN32
@@ -1668,7 +1670,7 @@ static int cuewNvrtcInit(const char** customPaths_NvRTC)
   }
 
   /* Load library. */
-  nvrtc_lib = dynamic_library_open_find(customPaths_NvRTC ? customPaths_NvRTC : nvrtc_paths);
+  nvrtc_lib = dynamic_library_open_find(nvrtc_paths);
 
   if (nvrtc_lib == NULL) {
     result = CUEW_ERROR_OPEN_FAILED;
@@ -1713,12 +1715,7 @@ _LIBRARY_FIND( nvrtc_lib, nvrtcVersion );
   return result;
 }
 
-// description in the header
-void cuewInit( int* resultDriver, int* resultRtc, cuuint32_t flags, 
-    const char** customPaths_Cuda, 
-    const char** customPaths_CudaRT, 
-    const char** customPaths_NvRTC 
-    )
+void cuewInit( int* resultDriver, int* resultRtc, cuuint32_t flags )
 {
   *resultDriver = CUEW_NOT_INITIALIZED;
   *resultRtc = CUEW_NOT_INITIALIZED;
@@ -1727,7 +1724,7 @@ void cuewInit( int* resultDriver, int* resultRtc, cuuint32_t flags,
 
   if (flags & CUEW_INIT_CUDA) 
   {
-    *resultDriver = cuewCudaInit(customPaths_Cuda, customPaths_CudaRT);
+    *resultDriver = cuewCudaInit();
 
 #ifndef CUEW_DO_NOT_CHECK_VERSION // not recommanded to define this flag, but just give a possibility for the developer to do it...
     if ( cudaRuntimeGetVersion_oro )
@@ -1746,7 +1743,7 @@ void cuewInit( int* resultDriver, int* resultRtc, cuuint32_t flags,
   }
   if (flags & CUEW_INIT_NVRTC) 
   {
-    *resultRtc = cuewNvrtcInit(customPaths_NvRTC);
+    *resultRtc = cuewNvrtcInit();
 
 #ifndef CUEW_DO_NOT_CHECK_VERSION // not recommanded to define this flag, but just give a possibility for the developer to do it...
     if (nvrtcVersion_oro) 
@@ -1926,7 +1923,7 @@ const char *cuewCompilerPath(void)
 {
 #ifdef _WIN32
   const char *defaultpaths[] = {
-      "C:/CUDA/bin", "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.2/bin", NULL};
+      "C:/CUDA/bin", "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.1/bin", NULL};
   const char *executable = "nvcc.exe";
 #else
   const char *defaultpaths[] = {"/Developer/NVIDIA/CUDA-5.0/bin",
