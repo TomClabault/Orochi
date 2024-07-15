@@ -3,7 +3,7 @@ AMD copyrights (Copyright (c) 2011 Advanced Micro Devices, Inc. All rights reser
 */
 #pragma once
 
-#if defined(__WINDOWS__)
+#if defined( __WINDOWS__ ) || defined( WIN32 ) || defined( _WIN32 ) || defined( __WIN32 ) && !defined( __CYGWIN__ )
 	#define NOMINMAX
 	#include <windows.h>
 	
