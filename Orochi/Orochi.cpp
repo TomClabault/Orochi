@@ -851,50 +851,47 @@ int oroInitialize( oroApi api, oroU32 flags,
 		#ifdef OROCHI_ENABLE_CUEW
 		uint32_t flag = 0;
 		if( api & ORO_API_CUDADRIVER )
-		{
 			flag |= CU4ORO::CUEW_INIT_CUDA;
-		}
 		if( api & ORO_API_CUDARTC )
-		{
 			flag |= CU4ORO::CUEW_INIT_NVRTC;
-		}
 		
 		int resultDriver, resultRtc;
 		CU4ORO::cuewInit( &resultDriver, &resultRtc, flag, customPaths_Cuda, customPaths_CudaRT, customPaths_NvRTC);
 
 		if( resultDriver == CU4ORO::CUEW_SUCCESS )
-		{
 			s_loadedApis |= ORO_API_CUDADRIVER;
-		}
+		else
+			// Could not load CUDA, returning what's going to be used as the error code
+			return ORO_API_CUDADRIVER;
+
 		if( resultRtc == CU4ORO::CUEW_SUCCESS )
-		{
 			s_loadedApis |= ORO_API_CUDARTC;
-		}
+		else
+			// Could not load CUDARTC, returning what's going to be used as the error code
+			return static_cast<int>(ORO_API_CUDARTC);
 		#endif
 	}
+
 	if( api & ORO_API_HIP )
 	{
 		uint32_t flag = 0;
 		if( api & ORO_API_HIPDRIVER )
-		{
 			flag |= HIPEW_INIT_HIPDRIVER;
-		}
 		if( api & ORO_API_HIPRTC )
-		{
 			flag |= HIPEW_INIT_HIPRTC;
-		}
 
 		int resultDriver, resultRtc;
 		hipewInit( &resultDriver, &resultRtc, flag, customPaths_Hip, customPaths_Hiprtc );
 
-		if( resultDriver == HIPEW_SUCCESS )
-		{
+		if (resultDriver == HIPEW_SUCCESS)
 			s_loadedApis |= ORO_API_HIPDRIVER;
-		}
+		else
+			return ORO_API_HIPDRIVER;
+
 		if( resultRtc == HIPEW_SUCCESS )
-		{
 			s_loadedApis |= ORO_API_HIPRTC;
-		}
+		else
+			return ORO_API_HIPRTC;
 	}
 	if( s_loadedApis == 0 )
 		return ORO_ERROR_OPEN_FAILED;
